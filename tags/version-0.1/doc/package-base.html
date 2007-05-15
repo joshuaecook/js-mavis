@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>package base</title>
+	<meta name="author" content="Joshua E Cook">
+	<!-- $Id$ -->
+</head>
+<body>
+<h1>base.js</h1>
+
+<h2>Functions</h2>
+
+<dl>
+  <dt><code>all( iterable )</code></dt>
+  <dd><p class="first">Returns <code>true</code> if all elements of the iterable object are truthy.</p></dd>
+  
+  <dt><code>any( iterable )</code></dt>
+  <dd><p class="first">Returns <code>true</code> if any element of the iterable object is truthy.</p></dd>
+  
+  <dt><code>bind( f, self[, argument1, …] )</code></dt>
+  <dd><p class="first">TODO: write doc</p></dd>
+  
+  <dt><code>cmp( x, y )</code></dt>
+  <dd><p class="first">Compares two objects and returns a negative integer if x &lt; y,
+   zero if x == y, and a positive integer ix x > y.</p></dd>
+  
+  <dt><code>enumerate( iterable )</code></dt>
+  <dd><p class="first">Creates an enumerator object.</p>
+    <p>The given argument must be an object that supports iteration.  The <code>next</code>
+       method of the enumerator returns a tuple containing the index (from zero)
+       and the corresponding value obtained by iteration over the given object.</p></dd>
+  
+  <dt><code>fail()</code></dt>
+  <dd><p class="first">Always returns false.</p></dd>
+  
+  <dt><code>filter( predicate, iterable )</code></dt>
+  <dd><p class="first">Creates a list containing the elements of an iterable object for which a predicate holds true.</p>
+    <p>If the given predicate is <code>null</code> or <code>undefined</code>, the truthy predicate is used.</p></dd>
+  
+  <dt><code>foreach( f, iterable )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+  
+  <dt><code>getattr( obj, name[, defaultValue] )</code></dt>
+  <dd><p class="first">Returns the value of the named property of object.</p></dd>
+  
+  <dt><code>hasattr( obj, name )</code></dt>
+  <dd><p class="first">Returns true if the object has the specified named property.</p></dd>
+  
+  <dt><code>identity( obj )</code></dt>
+  <dd><p class="first">The identity function.</p></dd>
+  
+  <dt><code>is_callable( obj )</code></dt>
+  <dd><p class="first">Returns true if the given object appears callable.</p>
+    <p>A callable object is either an instance of <code>Function</code> or has a property <code>call</code> that is an instance of <code>Function</code>.</p></dd>
+  
+  <dt><code>iter( obj[, sentinel] )</code></dt>
+  <dd><p class="first">Creates an iterator object.</p>
+    <p>If only a single argument is given, the given object must support the iteration protocol
+       or the sequence protocol.  A <code>TypeError</code> is raised if it does not support either of these.</p>
+    <p>If a second argument is given, the first argument must be a callable object.  The iterator
+       will call it will no arguments for each call to its own <code>next</code> method.  <code>StopIteration</code> will
+       be raised when the value returned is equal to the second given argument.</p></dd>
+  
+  <dt><code>len( obj )</code></dt>
+  <dd><p class="first">Returns the length of an object.</p></dd>
+  
+  <dt><code>list( sequence )</code></dt>
+  <dd><p class="first">Creates a list containing the same items in the same order as those in the given sequence.</p>
+    <p>The given argument must support iteration.  Returns an empty list when no argument is given.</p></dd>
+  
+  <dt><code>map( f, iterable1[, iterable2, …] )</code></dt>
+  <dd><p class="first">Creates a list containing the result of applying <code>f</code> to every item in the given iterable argument.</p>
+    <p>If additional iterable arguments are given, <code>f</code> must accept that many arguments, and is applied to
+       all of the iterables in parallel.</p></dd>
+  
+  <dt><code>match( predicate1, bridge1[, predicate2, bridge2, …] )</code></dt>
+  <dd><p class="first">Creates an adapter from a selection of predicates and bridges.</p></dd>
+  
+  <dt><code>object( [obj] )</code></dt>
+  <dd><p class="first">Creates a new object with the given object as its prototype.</p>
+    <p>If no argument is given, creates a new, anonymous object.</p></dd>
+  
+  <dt><code>pass()</code></dt>
+  <dd><p class="first">Always returns true.</p></dd>
+  
+  <dt><code>range( start[, stop[, step]] )</code></dt>
+  <dd><p class="first">Creates a list containing an arithmetic progression.</p></dd>
+  
+  <dt><code>reduce( f, iterable[, initialValue] )</code></dt>
+  <dd><p class="first">TODO: write doc</p></dd>
+  
+  <dt><code>setattr( obj, name, value )</code></dt>
+  <dd><p class="first">Assigns a value to the named property of an object.</p></dd>
+  
+  <dt><code>truthy( obj )</code></dt>
+  <dd><p class="first">Coerces an object into a boolean value.</p>
+    <p>Returns <code>false</code> for <code>false</code>, <code>0</code>, 
+       <code>NaN</code>, <code>null</code>, <code>undefined</code>, 
+       or an empty string. Returns <code>true</code> for all other values.</p></dd>
+  
+  <dt><code>zip( iterable1[, iterable2, …] )</code></dt>
+  <dd><p class="first">Returns a list of n-tuples, with n being the length of the shortest argument,
+       where the i'th tuple contains the i'th element from each argument.</p>
+    <p>Returns an empty list if no arguments are given.</p></dd>
+  
+</dl>
+
+</body>
+</html>
