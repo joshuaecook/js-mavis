@@ -11,6 +11,57 @@
 <body>
 <h1>test.js</h1>
 
+<p>A functional unit testing framework, based on <a href="http://www.xs4all.nl/~mmzeeman/ocaml/ounit-doc/OUnit.html">OCaml’s OUnit</a>.</p>
+
+<h2>Synopsis</h2>
+
+<pre><code>var result_to_string = function ( result )
+  {
+  if ( test.result.isSucess(result) )
+    { return "ok";  }
+  if ( test.result.isFailure(result) )
+    { return "FAIL: "+test.result.message(result);  }
+  if ( test.result.isError(result) )
+    { return "ERROR: "+test.result.message(result);  }
+  };
+  
+var report = function ( event )
+  {
+  if ( test.event.isStart(event) )
+    { document.write(event.path.join(':')+"\n");  }
+  else if ( test.event.isResult(event) )
+    { document.write(result_to_string(event.result)+"\n");  }
+  };
+
+var setup = function ()
+  {
+  var T = function ( value ) { this.value = value;  };
+  T.prototype.func = function () { return this.value;  };
+  return T;
+  };
+var teardown = function () {};
+var fix = function ( f )
+  {
+  return test.fixture(setup,teardown,f);
+  };
+
+var tests = test.label("boring package",test.suite(
+  test.label("boring",fix(function (T)
+    {
+    var o = new T("boring");
+    test.assertTrue("func is a Function",o.func instanceof Function);
+    test.assertEqual("boring",o.func());
+    })),
+  test.label("boring2",function ()
+    {
+    var ary = ['a','b','c'];
+    test.assertEqual(3,ary.length);
+    })
+  ));
+
+var runner = test.runner(report);
+var results = runner(tests);</code></pre>
+
 <h2>Functions</h2>
 
 <dl>
@@ -39,57 +90,88 @@
   <dd><p class="first">TODO: write doc.</p></dd>
 
   <dt><code>test.assertEqual( expected, actual[, defaults] )</code></dt>
-  <dd><p class="first">Fails if the expected value does not compare to the actual value.</p>
-    <p>Additional parameters may be given in the defaults object.  The key
-       "printer" in defaults may be associated with a function used to 
-       convert the values to strings.  The key "message" may be associated
-       with a string that will be printed on failure.</p></dd>
+  <dd><p class="first">Fails if the expected value <em>does not</em> compare to the actual value.</p>
+    <p>Additional parameters may be given in the defaults object.  The following
+       properties may be specified:</p>
+    <dl>
+      <dt><code>printer</code></dt>
+      <dd>A function used to convert the values to strings.  
+        If absent the values will not be included in the failure message.</dd>
+      <dt><code>message</code></dt>
+      <dd>A string that added to the failure message.</dd>
+      <dt><code>compare</code></dt>
+      <dd>A function used to compare the values.  
+        The function should take two arguments, and return <code>0</code> if they
+        are equal, a negative value if the first is lesser, 
+        or a positive value is the first is greater.
+        If absent, a naïve comparison is performed using the 
+        <code>===</code>, <code>&lt;</code>, and <code>&gt;</code> operators.</li>
+    </dl></dd>
 
   <dt><code>test.assertNotEqual( expected, actual[, defaults] )</code></dt>
-  <dd><p class="first">Fails if the expected value does compare to the actual value.</p>
-    <p>Additional parameters may be given in the defaults object.  The key
-       "printer" in defaults may be associated with a function used to 
-       convert the values to strings.  The key "message" may be associated
-       with a string that will be printed on failure.</p></dd>
+  <dd><p class="first">Fails if the expected value <em>does</em> compare to the actual value.</p>
+    <p>Additional parameters may be given in the defaults object.  The following
+       properties may be specified:</p>
+    <dl>
+      <dt><code>printer</code></dt>
+      <dd>A function used to convert the values to strings.  
+        If absent the values will not be included in the failure message.</dd>
+      <dt><code>message</code></dt>
+      <dd>A string that added to the failure message.</dd>
+      <dt><code>compare</code></dt>
+      <dd>A function used to compare the values.  
+        The function should take two arguments, and return <code>0</code> if they
+        are equal, a negative value if the first is lesser, 
+        or a positive value is the first is greater.
+        If absent, a naïve comparison is performed using the 
+        <code>===</code>, <code>&lt;</code>, and <code>&gt;</code> operators.</li>
+    </dl></dd>
 
   <dt><code>test.assertNotTrue( message, value )</code></dt>
-  <dd><p class="first">Fails if the given value is true.</p></dd>
+  <dd><p class="first">Fails if the given value evaluates as <code>true</code>.</p></dd>
 
   <dt><code>test.assertRaises( errorT, f[, message] )</code></dt>
   <dd><p class="first">Fails if the function f does not raise an error like the one
        given as an argument.</p></dd>
 
   <dt><code>test.assertString( message )</code></dt>
-  <dd><p class="first">Fails if the given message is not the empty string.</p></dd>
+  <dd><p class="first">Fails if the given message is not an empty string.</p></dd>
 
   <dt><code>test.assertTrue( message, value )</code></dt>
-  <dd><p class="first">Fails if the given value is false.</p></dd>
+  <dd><p class="first">Fails if the given value evaluates as <code>false</code>.</p></dd>
 
   <dt><code>test.fail( message )</code></dt>
-  <dd><p class="first">Fails with the given message.</p></dd>
+  <dd><p class="first">Fails unconditionally with the given message.</p></dd>
 
   <dt><code>test.fixture( setup, teardown, f )</code></dt>
-  <dd><p class="first">Scaffolds a function with a setup and teardown function.</p>
+  <dd><p class="first">Scaffolds a function with an execution environment.</p>
     <p>Returns a function that, when called, first computes the result
-       of the setup function.  The return value is passed as an argument
-       to the function f.  Finally, the same return value is passed as
-       an argument to the teardown function.</p>
-    <p>Any errors raised in the execution setup or f functions will
-       be raised again unmodified.  The teardown function will be executed
+       of the <code>setup</code> function.  This value is passed as an argument
+       to the function <code>f</code>.  Finally, the same value is passed as
+       an argument to the <code>teardown</code> function.</p>
+    <p>Any errors raised from <code>setup</code> or <code>f</code> functions will
+       be raised again unmodified.  The <code>teardown</code> function will be executed
        before any errors are re-raised.</p></dd>
 
   <dt><code>test.label( label, testcase )</code></dt>
-  <dd><p class="first">Creates a labelled testcase from a given testcase.</p></dd>
+  <dd><p class="first">Creates a labeled testcase from a given testcase.</p></dd>
 
   <dt><code>test.runner( report )</code></dt>
-  <dd><p class="first">Returns a test runner which uses the given report function to
-       print testing events and results.</p></dd>
+  <dd><p class="first">Returns a test runner which uses the given function to
+       report test events.</p>
+    <p>The <code>report</code> will be invoked with a single parameter
+       at the start of each testcase, 
+       when the testcase has produced a result,
+       and when the testcase has ended.</p>
+    <p>Pattern matching may be done on the received event using the <code>test.event.is…</code> methods.</p>
+    <p>Result events will have a <code>result</code> property describing the outcome of the testcase.
+       Pattern matching may be done on this property using the <code>test.result.is…</code> methods.</dd>
 
   <dt><code>test.suite( testcase1[, testcase2, …] )</code></dt>
   <dd><p class="first">Creates a composite testcase from a given list of testcases.</p></dd>
 
   <dt><code>test.testcase( f )</code></dt>
-  <dd><p class="first">Creates a testcase from a given test function.</p></dd>
+  <dd><p class="first">Creates a testcase from a given function.</p></dd>
 
 </dl>
 
