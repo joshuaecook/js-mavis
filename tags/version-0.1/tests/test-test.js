@@ -1,5 +1,5 @@
 if ( 'undefined' === typeof test )
-  { throw "test-test depends on test package"  }
+  { throw 'test-test depends on test package';  }
 
 var tests;
 if ( 'undefined' === typeof tests ) 
@@ -24,6 +24,7 @@ tests.test = (function ( runner )
       {
       var T = function ( value ) { this.value = value;  };
       T.prototype.func = function () { return this.value;  };
+      T.prototype.err = function ( err ) { throw err;  };
       return T;
       };
     var teardown = function () {};
@@ -50,6 +51,19 @@ tests.test = (function ( runner )
     l("fail",t(function ()
       {
       test.fail("this should fail")
-      }))
+      })),
+    l("raise",s(
+      t(fix(function ( T )
+        {
+        var o = new T("boring");
+        var f = function () { o.err("boring error");  };
+        test.assertRaises("boring error",f,"'boring error' should be raised")
+        })),
+      t(function ()
+        {
+        var f = function () { throw new TypeError();  }
+        test.assertRaises(TypeError,f,"a TypeError should be raised")
+        })
+      ))
     ));
   })();

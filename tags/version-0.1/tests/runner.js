@@ -1,5 +1,5 @@
 if ( 'undefined' === typeof test )
-  { throw "runner depends on test package"  }
+  { throw 'runner depends on test package';  }
 
 var runner = test.runner(function ( event )
   {
