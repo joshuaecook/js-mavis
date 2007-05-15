@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>package base</title>
+	<meta name="author" content="Joshua E Cook">
+	<!-- $Id$ -->
+</head>
+<body>
+<h1>test.js</h1>
+
+<h2>Functions</h2>
+
+<dl>
+  <dt><code>test.event.isEnd( event )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.event.isResult( event )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.event.isStart( event )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.result.isError( result )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.result.isFailure( result )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.result.isSuccess( result )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.result.message( result )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.result.type( result )</code></dt>
+  <dd><p class="first">TODO: write doc.</p></dd>
+
+  <dt><code>test.assertEqual( expected, actual[, defaults] )</code></dt>
+  <dd><p class="first">Fails if the expected value does not compare to the actual value.</p>
+    <p>Additional parameters may be given in the defaults object.  The key
+       "printer" in defaults may be associated with a function used to 
+       convert the values to strings.  The key "message" may be associated
+       with a string that will be printed on failure.</p></dd>
+
+  <dt><code>test.assertNotEqual( expected, actual[, defaults] )</code></dt>
+  <dd><p class="first">Fails if the expected value does compare to the actual value.</p>
+    <p>Additional parameters may be given in the defaults object.  The key
+       "printer" in defaults may be associated with a function used to 
+       convert the values to strings.  The key "message" may be associated
+       with a string that will be printed on failure.</p></dd>
+
+  <dt><code>test.assertNotTrue( message, value )</code></dt>
+  <dd><p class="first">Fails if the given value is true.</p></dd>
+
+  <dt><code>test.assertRaises( errorT, f[, message] )</code></dt>
+  <dd><p class="first">Fails if the function f does not raise an error like the one
+       given as an argument.</p></dd>
+
+  <dt><code>test.assertString( message )</code></dt>
+  <dd><p class="first">Fails if the given message is not the empty string.</p></dd>
+
+  <dt><code>test.assertTrue( message, value )</code></dt>
+  <dd><p class="first">Fails if the given value is false.</p></dd>
+
+  <dt><code>test.fail( message )</code></dt>
+  <dd><p class="first">Fails with the given message.</p></dd>
+
+  <dt><code>test.fixture( setup, teardown, f )</code></dt>
+  <dd><p class="first">Scaffolds a function with a setup and teardown function.</p>
+    <p>Returns a function that, when called, first computes the result
+       of the setup function.  The return value is passed as an argument
+       to the function f.  Finally, the same return value is passed as
+       an argument to the teardown function.</p>
+    <p>Any errors raised in the execution setup or f functions will
+       be raised again unmodified.  The teardown function will be executed
+       before any errors are re-raised.</p></dd>
+
+  <dt><code>test.label( label, testcase )</code></dt>
+  <dd><p class="first">Creates a labelled testcase from a given testcase.</p></dd>
+
+  <dt><code>test.runner( report )</code></dt>
+  <dd><p class="first">Returns a test runner which uses the given report function to
+       print testing events and results.</p></dd>
+
+  <dt><code>test.suite( testcase1[, testcase2, …] )</code></dt>
+  <dd><p class="first">Creates a composite testcase from a given list of testcases.</p></dd>
+
+  <dt><code>test.testcase( f )</code></dt>
+  <dd><p class="first">Creates a testcase from a given test function.</p></dd>
+
+</dl>
+
+</body>
+</html>
