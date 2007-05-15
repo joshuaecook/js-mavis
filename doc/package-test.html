@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>package base</title>
+	<title>package test</title>
 	<meta name="author" content="Joshua E Cook">
 	<!-- $Id$ -->
 </head>
@@ -15,35 +15,19 @@
 
 <h2>Synopsis</h2>
 
-<pre><code>var result_to_string = function ( result )
+<pre><code>var fix = function ( f )
   {
-  if ( test.result.isSucess(result) )
-    { return "ok";  }
-  if ( test.result.isFailure(result) )
-    { return "FAIL: "+test.result.message(result);  }
-  if ( test.result.isError(result) )
-    { return "ERROR: "+test.result.message(result);  }
-  };
-  
-var report = function ( event )
-  {
-  if ( test.event.isStart(event) )
-    { document.write(event.path.join(':')+"\n");  }
-  else if ( test.event.isResult(event) )
-    { document.write(result_to_string(event.result)+"\n");  }
-  };
+  var setup = function ()
+    {
+    var T = function ( value ) { this.value = value;  };
+    T.prototype.func = function () { return this.value;  };
+    return T;
+    };
+  var teardown = function () {};
 
-var setup = function ()
-  {
-  var T = function ( value ) { this.value = value;  };
-  T.prototype.func = function () { return this.value;  };
-  return T;
-  };
-var teardown = function () {};
-var fix = function ( f )
-  {
   return test.fixture(setup,teardown,f);
   };
+
 
 var tests = test.label("boring package",test.suite(
   test.label("boring",fix(function (T)
@@ -59,7 +43,23 @@ var tests = test.label("boring package",test.suite(
     })
   ));
 
-var runner = test.runner(report);
+
+var runner = test.runner(function ( event )
+  {
+  if ( test.event.isStart(event) )
+    { document.write(event.path.join(':')+"\n");  }
+  else if ( test.event.isResult(event) )
+    { 
+    if ( test.result.isSucess(event.result) )
+      { document.write("ok\n");  }
+    else if ( test.result.isFailure(event.result) )
+      { document.write("FAIL: "+test.result.message(event.result)+"\n");  }
+    else if ( test.result.isError(event.result) )
+      { document.write("ERROR: "+test.result.message(event.result)+"\n");  }
+    }
+  });
+
+
 var results = runner(tests);</code></pre>
 
 <h2>Functions</h2>
@@ -135,13 +135,13 @@ var results = runner(tests);</code></pre>
        given as an argument.</p></dd>
 
   <dt><code>test.assertString( message )</code></dt>
-  <dd><p class="first">Fails if the given message is not an empty string.</p></dd>
+  <dd><p class="first">Fails if the given message is <em>not</em> an empty string.</p></dd>
 
   <dt><code>test.assertTrue( message, value )</code></dt>
   <dd><p class="first">Fails if the given value evaluates as <code>false</code>.</p></dd>
 
   <dt><code>test.fail( message )</code></dt>
-  <dd><p class="first">Fails unconditionally with the given message.</p></dd>
+  <dd><p class="first">Fails <em>unconditionally</em> with the given message.</p></dd>
 
   <dt><code>test.fixture( setup, teardown, f )</code></dt>
   <dd><p class="first">Scaffolds a function with an execution environment.</p>
@@ -157,9 +157,9 @@ var results = runner(tests);</code></pre>
   <dd><p class="first">Creates a labeled testcase from a given testcase.</p></dd>
 
   <dt><code>test.runner( report )</code></dt>
-  <dd><p class="first">Returns a test runner which uses the given function to
-       report test events.</p>
-    <p>The <code>report</code> will be invoked with a single parameter
+  <dd><p class="first">Returns a function that acts as a test runner, using the given function to
+       report test events, and returning a list of all test results.</p>
+    <p>The <code>report</code> function will be invoked with a single parameter
        at the start of each testcase, 
        when the testcase has produced a result,
        and when the testcase has ended.</p>
