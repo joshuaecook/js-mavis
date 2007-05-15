@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>package timeit</title>
+	<meta name="author" content="Joshua E Cook">
+	<!-- $Id$ -->
+</head>
+<body>
+<h1>timeit.js</h1>
+
+<h2>Functions</h2>
+
+<dl>
+  <dt><code>timeit.iterate( iterations, f[, argument1, …] )</code></dt>
+  <dd><p class="first">Calculates the total running time of executing a given function a given number of times.</p>
+    <p>Return the total execution time in ms.</p>
+    <p>If a number of iterations is not given, the default number is 1000000.</p>
+    <p>Any additional arguments are passed along to the given function.</p></dd>
+
+  <dt><code>timeit.repeat( repetitiions, iterations, f[, argument1, …] )</code></dt>
+  <dd><p class="first">Repeatedly calculates the total running time of executing a given function a given number of times.</p>
+    <p>Returns a list containing the total execution time in ms of each repetition.</p>
+    <p>If a number of repetitions is not given, the default number is 3.  
+       If a number of iterations is not given, the default number is the default for <code>timeit.iterate</code>.</p>
+    <p>Any additional arguments are passed along to the given function.</p></dd>
+
+  <dt><code>timeit.timeit( f[, argument1, …] )</code></dt>
+  <dd><p class="first">Calculates the running time of a given function.</p>
+    <p>Executes <code>f</code> and returns a tuple containing the execution time in ms 
+       and the return value of the function.</p>
+    <p>Any additional arguments are passed along to the given function.</p></dd>
+
+</dl>
+
+</body>
+</html>
