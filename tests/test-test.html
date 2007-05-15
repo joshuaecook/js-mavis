@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>test base</title>
+	<meta name="author" content="Joshua E Cook">
+	<script type="text/javascript" charset="utf-8" src="../lib/mavis/base.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../lib/mavis/test.js"></script>
+	<!-- $Id$ -->
+</head>
+<body>
+<h1>base.js</h1>
+
+<pre>
+<script type="text/javascript" charset="utf-8">
+var fix = function ( f )
+  {
+  var setup = function ()
+    {
+    var T = function ( value ) { this.value = value;  };
+    T.prototype.func = function () { return this.value;  };
+    return T;
+    };
+  var teardown = function () {};
+
+  return test.fixture(setup,teardown,f);
+  };
+
+
+var tests = test.label("boring package",test.suite(
+  test.label("boring",test.testcase(fix(function (T)
+    {
+    var o = new T("boring");
+    test.assertTrue("func is a Function",o.func instanceof Function);
+    test.assertEqual("boring",o.func());
+    }))),
+  test.label("boring2",test.testcase(function ()
+    {
+    var ary = ['a','b','c'];
+    test.assertEqual(3,ary.length);
+    }))
+  ));
+
+
+var runner = test.runner(function ( event )
+  {
+  if ( test.event.isStart(event) )
+    { document.write(event.path.join(':')+"\n");  }
+  else if ( test.event.isResult(event) )
+    {
+    if ( test.result.isSuccess(event.result) )
+      { document.write("ok\n");  }
+    else if ( test.result.isFailure(event.result) )
+      { document.write("FAIL: "+test.result.message(event.result)+"\n");  }
+    else if ( test.result.isError(event.result) )
+      { document.write("ERROR: "+test.result.message(event.result)+"\n");  }
+    }
+  else if ( test.event.isEnd(event) )
+    {
+    document.write("\n");
+    }
+  });
+
+
+var results = runner(tests);
+</script>
+</pre>
+
+</body>
+</html>
