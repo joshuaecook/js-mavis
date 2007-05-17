@@ -1,63 +1,84 @@
-/**
- * 
+/*!
+ * @header base.js
  *
  * @author Joshua E Cook
  * @version $Id$
- * @copyright __MyCompanyName__, 27 April, 2007
- * @package default
- **/
+ * @copyright Joshua E Cook, 27 April, 2007
+ *
+ * @discussion Basic functional programming tools.
+ *
+ * @encoding utf-8
+ */
 
+/*! @var NotFound
+ * TODO: write doc
+ */
 var NotFound = 
   { name: "NotFound", message: "Not Found" };
   
+/*! @var StopIteration
+ * TODO: write doc
+ */
 var StopIteration = 
   { name: "StopIteration", message: "Stop Iteration" };
 
-/**
- * Creates a new object with the given object as its prototype.
+/*! @function object
+ * @abstract Creates a new object.
+ * @param proto A prototype object.
  *
- * If no argument is given, creates a new, anonymous object.
- **/
-function object( obj )
+ * @discussion If no prototype is given, a new, empty object is used.
+ *
+ * @return A new object.
+ */
+function object( proto )
   {
-  if ( undefined === obj )
-    { return {};  }
-    
+  proto = proto || {}
+  
   var T = function () {};
-  T.prototype = obj;
+  T.prototype = proto;
   return new T();
   }
 
-/**
- * Coerces an object into a boolean value.
+/*! @function truthy
+ * @abstract Coerces an object into a boolean value.
+ * @param obj An object.
  *
- * Returns false for false, 0, NaN, null, undefined, or an empty string.
- * Returns true for all other values.
- **/
+ * @return A boolean value.  <var>false</var> for <var>false</var>, <var>0</var>, <var>NaN</var>, <var>null</var>, <var>undefined</var>, or an empty string, <var>true</var> for all other values.
+ */
 function truthy( obj )
   { return !!obj;  }
 
-/**
- * The identity function.
- **/
+/*! @function identity
+ * @abstract The identity function.
+ * @param obj An object.
+ *
+ * @return The same object.
+ */
 function identity( obj )
   { return obj;  }
 
-/**
- * Always returns true.
- **/
+/*! @function pass
+ * @abstract The truth constant.
+ *
+ * @return <var>true</var>.
+ */
 function pass() 
   { return true;  }
 
-/**
- * Always returns false.
- **/
+/*! @function fail
+ * @abstract The falsity constant.
+ *
+ * @return <var>false</var>.
+ */
 function fail()
   { return false;  }
 
-/**
- * Returns true if the given object appears callable.
- **/
+/*! @function callable
+ * @abstract Determines if an object appears callable.
+ * @param obj An object.
+ *
+ * Returns <var>true</var> if the given object appears callable.
+ */
 function is_callable( obj )
   {
   return (undefined !== obj) &&
@@ -65,10 +86,10 @@ function is_callable( obj )
            obj.call instanceof Function );
   }
 
-/**
+/*!
  * Creates an adapter from a selection of predicates and bridges.
- **/
-function match( predicate1, bridge1 /*, ... */ )
+ */
+function match( predicate1, bridge1 )
   {
   var argc = arguments.length,
       argv = arguments;
@@ -94,10 +115,10 @@ function match( predicate1, bridge1 /*, ... */ )
     };
   }
 
-/**
- * Compares two objects and returns a negative integer if x < y,
- * zero if x == y, and a positive integer ix x > y.
- **/
+/*!
+ * Compares two objects and returns a negative integer if <var>x</var> is less than <var>y</var>,
+ * zero if <var>x</var> and <var>y</var> are equal, or a positive integer if <var>x</var> is greater than <var>y</var>.
+ */
 var cmp = (function ( adapter )
   {
   return function ( x, y )
@@ -172,59 +193,81 @@ var cmp = (function ( adapter )
       }
     ));
 
-/**
- * Returns true if the object has the specified named property.
- **/
+/*! @function hasattr
+ * @abstract Determines if the object has a property with the given name.
+ * @param obj An object.
+ * @param name The name of a property.
+ *
+ * @return A boolean value, <var>true</var> if the object has the named property, <var>false</var> otherwise.
+ */
 function hasattr( obj, name )
   { return undefined !== obj[name];  }
 
-/**
- * Returns the value of the named property of object.
- **/
+/*! @function getattr
+ * @abstract Retrieves the value of the property of an object.
+ * @param obj An object.
+ * @param name The name of a property.
+ * @param defaultValue A default value.
+ *
+ * @throws ReferenceError if both the property and the default value are undefined.
+ *
+ * @return The value of the property of the object if it is not <var>undefined</var>, or <var>defaultValue</var> if the property of the object is <var>undefined</var> and <var>defaultValue</var> is not <var>undefined</var>.
+ */
 function getattr( obj, name, defaultValue )
   {
-  if ( undefined !== obj[name] )
-    { return obj[name];  }
 
-  if ( undefined !== defaultValue )
-    { return defaultValue;  }
+  if ( undefined === obj[name] )
+    {
+    if ( undefined === defaultValue )
+      { throw new ReferenceError();  }
+    
+    return defaultValue;
+    }
   
-  throw new ReferenceError();
+  return obj[name];
   }
 
-/**
- * Assigns a value to the named property of an object.
- **/
+/*! @function setattr
+ * @abstract Assigns a value to a property of an object.
+ * @param obj An object.
+ * @param name The name of a property.
+ * @param value The new value.
+ * 
+ * @return The object.
+ */
 function setattr( obj, name, value )
-  { obj[name] = value;  }
+  { 
+  obj[name] = value;
+  return obj;
+  }
 
-/**
- * Removes the named property from an object
- **/
+/*! @function delattr
+ * @abstract Removes a property from an object.
+ * @param obj An object.
+ * @param name The name of a property.
+ * 
+ * @return The object.
+ */
 function delattr( obj, name )
-  { delete obj[name];  }
+  { 
+  delete obj[name];
+  return obj;
+  }
 
-/**
- * Returns the length of an object.
- **/
+/*! @function len
+ * @abstract Determines the length of an object.
+ * @param obj An object.
+ *
+ * @return The length of the object, or <var>undefined</var> if the object does not have a length.
+ */
 function len( obj )
   {
   if ( undefined === obj.length && "number" !== typeof obj.length )
     { return undefined;  }
-    
+  
   return obj.length
   }
 
-/**
- * Creates an iterator object.
- *
- * If only a single argument is given, the given object must support the iteration protocol
- * or the sequence protocol.  A TypeError is raised if it does not support either of these.
- *
- * If a second argument is given, the first argument must be a callable object.  The iterator
- * will call it will no arguments for each call to its own next() method.  StopIteration will
- * be raised when the value returned is equal to the second given argument.
- **/
 var iter = (function ()
   {
   var adapter,
@@ -305,16 +348,26 @@ var iter = (function ()
       return it;  
       });
   
+  /*! @function iter
+   * @abstract Creates an iterator object.
+   * @param obj An iterable sequence or a callable object.
+   * @param sentinel A value.
+   * @throws TypeError if a single parameter is given and the object does not support iteration.
+   *
+   * @discussion If only a single argument is given, the given object must support the iteration protocol
+   * or the sequence protocol.
+   * 
+   * If a second argument is given, the first argument must be a callable object.  The iterator
+   * will invoke it will no arguments for each call to its own <var>next</var> method.  <var>StopIteration</var> will
+   * be raised when the value returned compares equally to <var>sentinel</var>.
+   *
+   * @return An iterator object.
+   */
   return function ( obj, sentinel )
     {
     var it;
   
-    if ( 2 === arguments.length )
-      { 
-      it = until(function (x) 
-        { return 0 === cmp(x,sentinel);  },obj);
-      }
-    else if ( 1 === arguments.length )
+    if ( 1 === arguments.length )
       {
       try
         { it = adapter(obj);  }
@@ -326,17 +379,27 @@ var iter = (function ()
         throw e;
         }
       }
+    else if ( 2 === arguments.length )
+      { 
+      it = until(function (x) 
+        { return 0 === cmp(x,sentinel);  },obj);
+      }
+    
     return it;
     };
   })();
 
-/**
- * Creates an enumerator object.
+/*! @function enumerate
+ * @abstract Creates an enumerating iterator.
+ * @param iterable An iterable sequence.
  *
- * The given argument must be an object that supports iteration.  The next()
- * method of the enumerator returns a tuple containing the index (from zero)
- * and the corresponding value obtained by iteration over the given object.
- **/
+ * @discussion The <var>next</var> method of the enumerator returns a tuple 
+ * containing the index (from zero) and the corresponding value obtained by
+ * iteration over the given sequence.
+ *
+ * @return An iterator object.
+ * The given argument must be an object that supports iteration.  
+ */
 function enumerate( iterable )
   {
   var it = iter(iterable);
@@ -352,9 +415,9 @@ function enumerate( iterable )
   return new_it;
   }
 
-/**
+/*!
  * Creates a list containing an arithmetic progression.
- **/
+ */
 function range( start, stop, step )
   {
   if ( 2 >= arguments.length )
@@ -380,9 +443,9 @@ function range( start, stop, step )
   return r;
   }
 
-/**
+/*!
  * TODO: write doc
- **/
+ */
 function foreach( f, iterable )
   {
   if ( 0 === cmp(undefined,f) ) 
@@ -402,11 +465,11 @@ function foreach( f, iterable )
     }
   }
 
-/**
+/*!
  * Creates a list containing the same items in the same order as those in the given sequence.
  *
  * The given argument must support iteration.  Returns an empty list when no argument is given.
- **/
+ */
 var list = (function ( adapter )
   {
   return function ( sequence )
@@ -478,55 +541,78 @@ var list = (function ( adapter )
     pass,
     function ( x ) { return [x];  }));
 
-/**
- * Returns true if any element of the iterable object is true.
- **/
-function any( iterable )
+/*! @function any
+ * @abstract Determines if the given predicate indicates <var>true</var> for any element of the iterable sequence.
+ * @param iterable An iterable sequence.
+ * @param predicate A boolean-valued function that accepts a single parameter.
+ * If a predicate is not given, the @link truthy <var>truthy</var> @/link is used.
+ *
+ * @discussion The predicate is invoked for each element of the iterable sequence.
+ * Iteration continues until the predicate indicates <var>true</var> or the sequence is exhausted.
+ *
+ * @return A boolean value.
+ */
+function any( iterable, predicate )
   {
   var res = false;
+  predicate = predicate || truthy;
   
   foreach(function (x)
     {
-    if ( truthy(x) )
-      {
-      res = true;
-      throw StopIteration;
-      }
+    if ( !predicate(x) )
+      { continue;  }
+    res = true;
+    throw StopIteration;
     },
     iterable);
   
   return res;
   }
 
-/**
- * Returns true if all elements of the iterable object are true.
- **/
-function all( iterable )
+/*! @function all
+ * @abstract Determines if the given predicate indicates <var>true</var> for all elements of the iterable sequence.
+ * @param iterable An iterable sequence.
+ * @param predicate A boolean-valued function that accepts a single parameter.
+ * If a predicate is not given, the @link truthy truthy predicate @/link is used.
+ *
+ * @discussion The predicate is invoked for each element of the iterable sequence.
+ * Iteration continues until the predicate indicates false or the sequence is exhausted.
+ *
+ * @return A boolean value.
+ */
+function all( iterable, predicate )
   {
   var res = true;
+  predicate = predicate || truthy;
   
   foreach(function (x)
     {
-    if ( !truthy(x) )
-      {
-      res = false;
-      throw StopIteration;
-      }
+    if ( predicate(x) )
+      { continue;  }
+    res = false;
+    throw StopIteration;
     },
     iterable);
   
   return res;
   }
 
-/**
- * Creates a list containing the elements of an iterable object for which a predicate holds true.
+/*! @function filter
+ * @abstract Filters an iterable sequence using a given predicate.
+ * @param predicate A boolean-valued function that accepts a single parameter.
+ * If the given predicate is undefined, the @link truthy truthy @/link predicate is used.
+ * @param iterable An iterable sequence.
  *
- * If the given predicate is undefined, the truthy predicate is used.
- **/
+ * @discussion The predicate is invoked for each element of the iterable sequence.
+ * Elements for which the predicate indicates <var>true</var> are appended to a new sequence.
+ *
+ * @throws Error Any error raised in the invocation of the predicate will be re-raised.
+ *
+ * @return A new sequence containing elements for which the predicate indicates <var>true</var>.
+ */
 function filter( predicate, iterable )
   {
-  if ( 0 === cmp(undefined,predicate) ) 
-    { predicate = truthy;  }
+  predicate = predicate || truthy;
     
   var it = iter(iterable),
       list = [],
@@ -537,9 +623,8 @@ function filter( predicate, iterable )
     while ( true )
       {
       v = it.next();
-      if ( 0 === cmp(false,predicate(v)) ) 
-        { continue;  }
-      list.push(v);
+      if ( predicate(v) )
+        { list.push(v);  }
       }
     }
   catch ( e )
@@ -551,13 +636,15 @@ function filter( predicate, iterable )
   return list;
   }
 
-/**
- * Returns a list of n tuples, with n being the length of the shortest argument,
- * where the i'th tuple contains the i'th element from each argument.
+/*! @function zip
+ * @abstract Creates a sequence of tuples from multiple iterable sequences.
+ * @param iterable An iterable sequence.
  *
+ * @return A list of <var>n</var> tuples, with <var>n</var> being the length of the shortest argument,
+ * where the <var>i</var>th tuple contains the <var>i</var>th element from each argument.  
  * Returns an empty list if no arguments are given.
- **/
-function zip( iterable/*, ... */ )
+ */
+function zip( iterable )
   {
   if ( 0 === arguments.length ) 
     { return [];  }
@@ -601,13 +688,17 @@ function zip( iterable/*, ... */ )
   return res;
   }
 
-/**
- * Creates a list containing the result of applying f to every item in the given iterable argument.
+/*! @function map
+ * @abstract Applies a function to each item in a sequence.
+ * @param f A function.
+ * @param iterable An iterable sequence.
  *
- * If additional iterable arguments are given, f must accept that many arguments, and is applied to
+ * @discussion If additional iterable arguments are given, <var>f</var> must accept that many arguments, and is applied to
  * all of the iterables in parallel.
- **/
-function map ( f, iterable/*, ... */ )
+ *
+ * @return A sequence containing the result of applying <var>f</var> to each item in the given iterable argument(s).
+ */
+function map ( f, iterable )
   {
   var res = [];
   var iters = [];
@@ -657,9 +748,26 @@ function map ( f, iterable/*, ... */ )
   return res;
   }
 
-/**
- * TODO: write doc
- **/
+/*! @function reduce
+ * @abstract Cumulatively applies a function to the elements of an iterable sequence.
+ * @param f A function.
+ * @param iterable An iterable sequence.
+ * @param initialValue The initial accumulator value.
+ *
+ * @discussion The function <var>f</var> should take two parameters,
+ * an accumulator and the next value in sequence, and should return the result
+ * of accumulating this next value.
+ *
+ * If <var>initialValue</var> is not <var>undefined</var>, 
+ * it is used as the first value of the accumulator, and is the default
+ * return value when the sequence is empty.
+ *
+ * For example, this application calculates the sum of a list of integers:
+ * 
+ * <code>reduce(function (v,w) { return v + w;  },[1,2,3,4,5],0);</code>
+ * 
+ * @return The result of reducing the sequence to a single value.
+ */
 function reduce( f, iterable, initialValue )
   {
   var it = iter(iterable),
@@ -681,9 +789,6 @@ function reduce( f, iterable, initialValue )
   return res;
   }
 
-/**
- * TODO: write doc
- **/
 var bind = (function ()
   {
   var do_bind = function ( f, self, argv )  
@@ -744,7 +849,14 @@ var bind = (function ()
       { return is_callable(f);  },
     do_bind);
   
-  return function ( f, self/* ... */ )
+  /*! @function bind
+   * @abstract Binds the <var>this</var> reference of a function.
+   * @param f A function or the name of a function.
+   * @param self An object.
+   *
+   * @return The bound function.
+   */
+  return function ( f, self )
     {
     var a = arguments;
     return adapter(f,self,list(arguments).slice(2));
